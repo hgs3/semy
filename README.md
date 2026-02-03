@@ -28,7 +28,7 @@ Two or more semantic versions can be sorted with the -s option.
 The sorted semantic versions are printed in ascending order on their own line.
 
 ```bash
-$ semy -s 2.0.0 2.0.0-rc.1 2.0.0-beta.11 2.0.0-beta.2 \\
+$ semy -s 2.0.0 2.0.0-rc.1 2.0.0-beta.11 2.0.0-beta.2 \
           2.0.0-beta 2.0.0-alpha.beta 2.0.0-alpha.1 2.0.0-alpha
 2.0.0-alpha
 2.0.0-alpha.1
@@ -81,12 +81,16 @@ See [semy.h](semy.h) for documentation.
 ```c
 #include <semy.h>
 #include <stdio.h>
-int main(int argc, char *argv[]) {
+
+int main(int argc, char *argv[])
+{
     semy_t semver;
     semy_parse(&semver, sizeof(semver), "1.0.0");
+
     printf("major: %d\n", semy_get_major(&semver));
     printf("minor: %d\n", semy_get_minor(&semver));
     printf("patch: %d\n", semy_get_patch(&semver));
+
     return 0;
 }
 ```
