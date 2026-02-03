@@ -392,6 +392,3 @@ int main(int argc, char *argv[])
 {
     return cli_main(argc, argv);
 }
-
-// TODO: Unit test the CLI.
-// TODO: Push to dev branch and setup GitHub actions build.
