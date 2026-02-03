@@ -1,0 +1,42 @@
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+
+# Autotools
+Makefile
+Makefile.in
+autom4te*
+aclocal.m4
+compile
+config
+configure
+configure~
+config.log
+config.status
+depcomp
+install-sh
+libtool
+stamp-h1
+missing
+ar-lib
+.libs
+.dirstamp
+.deps
+*.sub
+*.lo
+*.la
+*.guess
+*.tar.gz
+*.gz
+ltmain.sh
+
+# Mac OS X
+.DS_Store
+
+# CMake out-of-source build files
+build/*
+
+# pkg-config files
+semy.pc
