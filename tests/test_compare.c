@@ -115,10 +115,10 @@ TEST(semver, parse, .iterations=COUNT_OF(test_cases))
     int32_t result = -99;
     semy_error_t err;
 
-    err = semy_init(&v1, sizeof(v1), test_case->LHS);
+    err = semy_parse(&v1, sizeof(v1), test_case->LHS);
     ASSERT_EQ((int)err, SEMY_NO_ERROR);
 
-    err = semy_init(&v2, sizeof(v2), test_case->RHS);
+    err = semy_parse(&v2, sizeof(v2), test_case->RHS);
     ASSERT_EQ((int)err, SEMY_NO_ERROR);
 
     err = semy_compare(&v1, &v2, &result);
@@ -133,7 +133,7 @@ TEST(semver, null_arguments)
     int32_t result = 0;
     semy_t semver = {0};
     
-    err = semy_init(&semver, sizeof(semver), "1.0.0");
+    err = semy_parse(&semver, sizeof(semver), "1.0.0");
     ASSERT_EQ((int)SEMY_NO_ERROR, err);
 
     err = semy_compare(&semver, NULL, &result);

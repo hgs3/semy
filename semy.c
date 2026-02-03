@@ -29,7 +29,7 @@ enum
     VERSION_CORE_COUNT,
 };
 
-struct PreReleaseIdentifier
+struct preRelease
 {
     int32_t numeric_value;
     stringIndice_t string_value;
@@ -41,8 +41,8 @@ struct SemVer
     int32_t versions[VERSION_CORE_COUNT];
     uint8_t pre_release_count;
     uint8_t build_metadata_count;
-    stringIndice_t strings_ptr;
-    struct PreReleaseIdentifier pre_release[MAX_IDENTIFIERS];
+    stringIndice_t chars_allocated;
+    struct preRelease pre_release[MAX_IDENTIFIERS];
     stringIndice_t build_metadata[MAX_IDENTIFIERS];
     char strings[1032];
 };
@@ -53,15 +53,15 @@ static_assert((offsetof(struct SemVer, versions[VERSION_CORE_MINOR]) % 4) == 0, 
 static_assert((offsetof(struct SemVer, versions[VERSION_CORE_PATCH]) % 4) == 0, "expected 32-bit alignment");
 static_assert((offsetof(struct SemVer, pre_release_count) % 1) == 0, "expected 8-bit alignment");
 static_assert((offsetof(struct SemVer, build_metadata_count) % 1) == 0, "expected 8-bit alignment");
-static_assert((offsetof(struct SemVer, strings_ptr) % 2) == 0, "expected 16-bit alignment");
+static_assert((offsetof(struct SemVer, chars_allocated) % 2) == 0, "expected 16-bit alignment");
 static_assert((offsetof(struct SemVer, pre_release) % 4) == 0, "expected 32-bit alignment");
 static_assert((offsetof(struct SemVer, build_metadata) % 2) == 0, "expected 16-bit alignment");
 static_assert((offsetof(struct SemVer, strings) % 1) == 0, "expected 8-bit alignment");
 
-static_assert(sizeof(struct PreReleaseIdentifier) == 8, "expected 32-bit size");
-static_assert((offsetof(struct PreReleaseIdentifier, numeric_value) % 4) == 0, "expected 32-bit alignment");
-static_assert((offsetof(struct PreReleaseIdentifier, string_value) % 2) == 0, "expected 16-bit alignment");
-static_assert((offsetof(struct PreReleaseIdentifier, is_alphanumeric) % 2) == 0, "expected 16-bit alignment");
+static_assert(sizeof(struct preRelease) == 8, "expected 32-bit size");
+static_assert((offsetof(struct preRelease, numeric_value) % 4) == 0, "expected 32-bit alignment");
+static_assert((offsetof(struct preRelease, string_value) % 2) == 0, "expected 16-bit alignment");
+static_assert((offsetof(struct preRelease, is_alphanumeric) % 2) == 0, "expected 16-bit alignment");
 
 static_assert(sizeof(semy_t) == 2048, "expected 2 kb");
 static_assert(sizeof(semy_error_t) == 4, "expected 4 bytes");
@@ -330,12 +330,12 @@ static semy_error_t parse_pre_release_identifier(const char *string, size_t *adv
 static uint16_t add_string(struct SemVer *semver, const char *s, size_t slen)
 {   
     const uint16_t bytes_needed = (uint16_t)(slen + 1); // +1 for the null byte
-    const uint16_t bytes_remaining = (uint16_t)(MAX_VERSION_LENGTH - semver->strings_ptr);
+    const uint16_t bytes_remaining = (uint16_t)(MAX_VERSION_LENGTH - semver->chars_allocated);
     assert(bytes_remaining >= bytes_needed);
 
-    const uint16_t indice = semver->strings_ptr;
-    char *sptr = &semver->strings[semver->strings_ptr];
-    semver->strings_ptr += (uint16_t)bytes_needed;
+    const uint16_t indice = semver->chars_allocated;
+    char *sptr = &semver->strings[semver->chars_allocated];
+    semver->chars_allocated += (uint16_t)bytes_needed;
 
     strncpy(sptr, s, slen);
     return indice;
@@ -349,7 +349,7 @@ static semy_error_t add_pre_release_identifier(struct SemVer *semver, bool is_al
     }
 
     semy_error_t err = SEMY_NO_ERROR;
-    struct PreReleaseIdentifier *id = &semver->pre_release[semver->pre_release_count];
+    struct preRelease *id = &semver->pre_release[semver->pre_release_count];
     id->is_alphanumeric = is_alnum;
     id->string_value = add_string(semver, s, slen);
 
@@ -513,7 +513,7 @@ static semy_error_t parse_semver(struct SemVer *semver, const char *string, size
     return SEMY_NO_ERROR;
 }
 
-SEMY_API semy_error_t semy_init(semy_t *semver, size_t size, const char *version)
+SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *version)
 {
     if (version == NULL)
     {
@@ -610,7 +610,7 @@ SEMY_API const char *semy_get_pre_release(const semy_t *semver, int32_t index)
         return NULL;
     }
 
-    const struct PreReleaseIdentifier *id = &sv->pre_release[index];
+    const struct preRelease *id = &sv->pre_release[index];
     return &sv->strings[id->string_value];
 }
 
@@ -687,8 +687,8 @@ SEMY_API semy_error_t semy_compare(const semy_t *sv1, const semy_t *sv2, int32_t
     // Compare the pre-release versions.
     for (int32_t i = 0; i < minimum_pre_release_felds; i++)
     {
-        const struct PreReleaseIdentifier *x = &a->pre_release[i];
-        const struct PreReleaseIdentifier *y = &b->pre_release[i];
+        const struct preRelease *x = &a->pre_release[i];
+        const struct preRelease *y = &b->pre_release[i];
         
         // Identifiers consisting of only digits are compared numerically.
         if (x->is_alphanumeric && y->is_alphanumeric)

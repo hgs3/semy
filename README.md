@@ -1,6 +1,6 @@
 # Semy
 
-Semy (pronounced _"SEM-ee"_) is a [Semantic Version 2.0.0](https://semver.org/) parser and processor written in C11 with no external dependencies and no dynamic memory allocation.
+Semy (pronounced _SEM-ee_) is a [Semantic Version 2.0.0](https://semver.org/) parser and processor written in C11 with no external dependencies and no dynamic memory allocation.
 
 [![Build Status](https://github.com/hgs3/semy/actions/workflows/build.yml/badge.svg)](https://github.com/hgs3/semy/actions/workflows/build.yml)
 
@@ -83,7 +83,7 @@ See [semy.h](semy.h) for documentation.
 #include <stdio.h>
 int main(int argc, char *argv[]) {
     semy_t semver;
-    semy_init(&semver, sizeof(semver), "1.0.0");
+    semy_parse(&semver, sizeof(semver), "1.0.0");
     printf("major: %d\n", semy_get_major(&semver));
     printf("minor: %d\n", semy_get_minor(&semver));
     printf("patch: %d\n", semy_get_patch(&semver));

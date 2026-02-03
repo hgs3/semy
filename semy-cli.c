@@ -47,7 +47,7 @@ static int parse(const char *string, semy_t *semvar)
         }
     }
 
-    const semy_error_t err = semy_init(semvar, sizeof(semvar[0]), string);
+    const semy_error_t err = semy_parse(semvar, sizeof(semvar[0]), string);
     if (err == SEMY_BAD_SYNTAX)
     {
         fprintf(stderr, "error: invalid semantic version\n");

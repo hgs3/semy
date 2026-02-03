@@ -26,7 +26,7 @@ int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     puts(str);
 
     semy_t semy;
-    semy_init(&semy, sizeof(semy), str);
+    semy_parse(&semy, sizeof(semy), str);
 
     free(str);
     return 0;

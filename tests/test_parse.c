@@ -153,7 +153,7 @@ TEST(semver, parse, .iterations=COUNT_OF(test_cases))
     const char *input = test_case->string;
 
     semy_t semver = {0};
-    const semy_error_t err = semy_init(&semver, sizeof(semver), input);
+    const semy_error_t err = semy_parse(&semver, sizeof(semver), input);
     ASSERT_EQ((int)err, test_case->status_code, "unexpected error code parsing: %s", input);
 
     // If parsing is expected to fail, then don't extract the data.
@@ -208,7 +208,7 @@ TEST(semver, init_exceed_string_length_limit)
     memset(input, 'a', sizeof(input) - 1);
     memcpy(input, "1.0.0-", 6);
 
-    err = semy_init(&semver, sizeof(semver), input);
+    err = semy_parse(&semver, sizeof(semver), input);
     ASSERT_EQ((int)SEMY_LIMITS_EXCEEDED, err);
 }
 
@@ -223,7 +223,7 @@ TEST(semver, init_close_to_but_not_exeeding_string_limit)
     memset(input, 'a', sizeof(input) - 1);
     memcpy(input, "1.0.0-", 6);
 
-    err = semy_init(&semver, sizeof(semver), input);
+    err = semy_parse(&semver, sizeof(semver), input);
     ASSERT_EQ((int)SEMY_NO_ERROR, err);
 }
 
@@ -246,7 +246,7 @@ TEST(semver, init_too_many_pre_release_identifiers)
         }
     }
 
-    err = semy_init(&semver, sizeof(semver), input);
+    err = semy_parse(&semver, sizeof(semver), input);
     ASSERT_EQ((int)SEMY_LIMITS_EXCEEDED, err);
 }
 
@@ -269,28 +269,28 @@ TEST(semver, init_too_many_build_identifiers)
         }
     }
 
-    err = semy_init(&semver, sizeof(semver), input);
+    err = semy_parse(&semver, sizeof(semver), input);
     ASSERT_EQ((int)SEMY_LIMITS_EXCEEDED, err);
 }
 
 TEST(semver, init_null_string)
 {
     semy_t semver = {0};
-    const semy_error_t err = semy_init(NULL, sizeof(semver), "1.0.0");
+    const semy_error_t err = semy_parse(NULL, sizeof(semver), "1.0.0");
     ASSERT_EQ((int)SEMY_INVALID_OPERATION, err);
 }
 
 TEST(semver, init_null_version)
 {
     semy_t semver = {0};
-    const semy_error_t err = semy_init(&semver, sizeof(semver), NULL);
+    const semy_error_t err = semy_parse(&semver, sizeof(semver), NULL);
     ASSERT_EQ((int)SEMY_INVALID_OPERATION, err);
 }
 
 TEST(semver, init_illegal_size)
 {
     semy_t semver = {0};
-    const semy_error_t err = semy_init(&semver, sizeof(semver)-1, "1.0.0");
+    const semy_error_t err = semy_parse(&semver, sizeof(semver)-1, "1.0.0");
     ASSERT_EQ((int)SEMY_INVALID_OPERATION, err);
 }
 
@@ -306,7 +306,7 @@ TEST(semver, pre_release_illegal_arguments)
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
     
-    err = semy_init(&semver, sizeof(semver), "1.0.0-alpha");
+    err = semy_parse(&semver, sizeof(semver), "1.0.0-alpha");
     ASSERT_EQ((int)SEMY_NO_ERROR, err);
 
     ASSERT_NULL(semy_get_pre_release(&semver, -1));
@@ -322,7 +322,7 @@ TEST(semver, build_illegal_arguments)
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
     
-    err = semy_init(&semver, sizeof(semver), "1.0.0+build");
+    err = semy_parse(&semver, sizeof(semver), "1.0.0+build");
     ASSERT_EQ((int)SEMY_NO_ERROR, err);
 
     ASSERT_NULL(semy_get_build(&semver, -1));

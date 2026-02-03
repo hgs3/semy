@@ -28,7 +28,7 @@
     #define SEMY_API
 #endif
 
-typedef enum semy_error_t
+typedef enum semy_error
 {
     SEMY_NO_ERROR,                  // The operation was successful.
     SEMY_INVALID_OPERATION,         // The API was misused (e.g. null was passed where non-null was expected).
@@ -37,14 +37,14 @@ typedef enum semy_error_t
     SEMY_FORCE_32_BIT = 0x7FFFFFFF, // PRIVATE: Do not touch!
 } semy_error_t;
 
-typedef struct semy_t
+typedef struct semy
 {
     char _reserved[2048];
 } semy_t;
 
 // This function parses the 'version' string and populates the 'semy' structure with the results.
 // The 'size' parameter must be equal to the sizeof the 'semy_t' structure.
-SEMY_API semy_error_t semy_init(semy_t *semy, size_t size, const char *version);
+SEMY_API semy_error_t semy_parse(semy_t *semy, size_t size, const char *version);
 
 // The function populates the 'result' with either -1, 0, or 1 depending on if v1 < v2, v1 = v2, v1 > v2.
 SEMY_API semy_error_t semy_compare(const semy_t *v1, const semy_t *v2, int32_t *result);
