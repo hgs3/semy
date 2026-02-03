@@ -26,7 +26,7 @@ jobs:
       env:
         CC: ${{ matrix.platform.CC }}
       run: |
-        cmake .. -B build -DSEMY_BUILD_TESTS=ON
+        cmake -B build -DSEMY_BUILD_TESTS=ON
         cmake --build build
         ctest --test-dir build
     - name: Release Process
