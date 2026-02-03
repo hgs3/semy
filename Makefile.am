@@ -1,4 +1,4 @@
-EXTRA_DIST = autogen.sh LICENSE CMakeLists.txt SemyConfig.cmake.in README.md
+EXTRA_DIST = autogen.sh LICENSE CMakeLists.txt SemyConfig.cmake.in README.md semy.1
 
 AUTOMAKE_OPTIONS = subdir-objects
 
