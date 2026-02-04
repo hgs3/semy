@@ -1,6 +1,6 @@
 # Semy
 
-Semy (pronounced _SEM-ee_) is a [Semantic Version 2.0.0](https://semver.org/) parser and processor written in C11 with no external dependencies and no dynamic memory allocation.
+Semy (rhythms with "remy") is a [semantic version](https://semver.org/) parser and processor written in C11 with no external dependencies and no dynamic memory allocation.
 
 [![Build Status](https://github.com/hgs3/semy/actions/workflows/build.yml/badge.svg)](https://github.com/hgs3/semy/actions/workflows/build.yml)
 
@@ -21,6 +21,19 @@ Semy (pronounced _SEM-ee_) is a [Semantic Version 2.0.0](https://semver.org/) pa
 ## Comand-Line Interface
 
 Semy includes a command-line interface for validating, comparing, sorting and decomposing semantic versions.
+
+### Validate Semantic Versions
+
+Check if one or more semantic versions are well-formed according to the Semantic Version 2.0.0 specification.
+
+```bash
+$ semy -v 1.0.0-beta
+$ echo $?
+0
+$ semy -v 1.0.0beta
+$ echo $?
+1
+```
 
 ### Sort Semantic Versions
 

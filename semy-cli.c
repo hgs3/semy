@@ -110,6 +110,7 @@ static int do_sort(int argc, char *argv[])
         const int r = parse(semver->string, &semver->value);
         if (r != EXIT_SUCCESS)
         {
+            free(semvers);
             return r;
         }
     }
@@ -321,7 +322,7 @@ static int do_help(void)
     cli_puts("       Sort semantic versions and print them in ascending order on their");
     cli_puts("       own line to stdout.");
     cli_puts("");
-    cli_puts("  -V <versions>...");
+    cli_puts("  -v <versions>...");
     cli_puts("  --validate <versions>...");
     cli_puts("       Validate one or more semantic versions. If any semantic version is");
     cli_puts("       invalid, the exit status will be 1.");
@@ -338,7 +339,7 @@ static int do_help(void)
 
 static int do_version(void)
 {
-    cli_puts("1.0.0-alpha");
+    cli_puts("0.9.0");
     return EXIT_SUCCESS;
 }
 
@@ -354,8 +355,7 @@ static int cli_main(int argc, char *argv[])
             return do_help();
         }
 
-        if (strcmp(arg, "-v") == 0 ||
-            strcmp(arg, "--version") == 0)
+        if (strcmp(arg, "--version") == 0)
         {
             return do_version();
         }
@@ -386,7 +386,7 @@ static int cli_main(int argc, char *argv[])
             return do_decompose(arg, argc - 2, argv + 2);
         }
 
-        if (strcmp(arg, "-V") == 0 ||
+        if (strcmp(arg, "-v") == 0 ||
             strcmp(arg, "--validate") == 0)
         {
             return do_validate(argc - 2, argv + 2);

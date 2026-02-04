@@ -16,8 +16,12 @@ if ! command -v gcc &> /dev/null; then
 fi
 export CC=gcc
 
+# Clear any existing coverage report before generating a new one.
+# Otherwise you might get a stale report.
+rm -f coverage.info
+
 # Build the project and execute the tests to generate a coverage report.
-cmake .. -B coverage-build -DSEMY_BUILD_TESTS=ON -DSEMY_CODE_COVERAGE=ON
+cmake .. -B coverage-build -DSEMY_BUILD_TESTS=ON -DSEMY_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
 cmake --build coverage-build
 ctest --test-dir coverage-build
 

@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
-project(Semy LANGUAGES C VERSION 1.0.0)
+project(Semy LANGUAGES C VERSION 0.9.0)
 
 include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -18,6 +19,9 @@ write_basic_package_version_file(${CMAKE_BINARY_DIR}/SemyConfigVersion.cmake COM
 
 # Generate configuration for CMake's find package tools.
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/SemyConfig.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/SemyConfig.cmake" @ONLY)
+
+# Generate the pkg-config file.
+configure_file("${CMAKE_SOURCE_DIR}/semy.pc.in" "${CMAKE_BINARY_DIR}/semy.pc" @ONLY)
 
 # Enable development flags.
 if (SEMY_CODE_COVERAGE)
@@ -66,6 +70,8 @@ install(TARGETS semy LIBRARY DESTINATION lib PUBLIC_HEADER DESTINATION include)
 install(TARGETS semy_static ARCHIVE DESTINATION lib PUBLIC_HEADER DESTINATION include)
 install(FILES ${PROJECT_BINARY_DIR}/SemyConfig.cmake DESTINATION cmake)
 install(FILES ${PROJECT_BINARY_DIR}/SemyConfigVersion.cmake DESTINATION cmake)
+install(FILES semy.1 DESTINATION "${CMAKE_INSTALL_MANDIR}/man1" COMPONENT doc)
+install(FILES semy.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # Register the tests if building from repo checkout.
 # The release acrhive omits the unit test.
