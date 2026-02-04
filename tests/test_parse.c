@@ -11,11 +11,9 @@
  */
 
 #include "semy.h"
-#include <audition.h>
+#include "test_utils.h"
 #include <stdio.h>
 #include <string.h>
-
-#define COUNT_OF(ARRAY) (sizeof(ARRAY)/sizeof((ARRAY)[0]))
 
 static const struct TestCase {
     const char *string;

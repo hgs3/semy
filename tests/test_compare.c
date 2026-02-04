@@ -11,9 +11,7 @@
  */
 
 #include "semy.h"
-#include <audition.h>
-
-#define COUNT_OF(ARRAY) (sizeof(ARRAY)/sizeof((ARRAY)[0]))
+#include "test_utils.h"
 
 #define LESS_THAN -1
 #define EQUAL_TO 0

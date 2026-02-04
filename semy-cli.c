@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <stdarg.h>
 
 #define EXIT_BAD_SYNTAX 1
 #define EXIT_INVALID_OPTION 2
@@ -25,6 +26,13 @@ struct semver
     const char *string;
     semy_t value;
 };
+
+void cli_fprintf(FILE *stream, const char *format, ...);
+
+static void cli_puts(const char *s)
+{
+    cli_fprintf(stdout, "%s\n", s);
+}
 
 static int compare_semvers(const void *a, const void *b)
 {
@@ -50,17 +58,17 @@ static int parse(const char *string, semy_t *semvar)
     const semy_error_t err = semy_parse(semvar, sizeof(semvar[0]), string);
     if (err == SEMY_BAD_SYNTAX)
     {
-        fprintf(stderr, "error: invalid semantic version\n");
+        cli_fprintf(stderr, "error: invalid semantic version\n");
         return EXIT_BAD_SYNTAX;
     }
     else if (err == SEMY_LIMITS_EXCEEDED)
     {
-        fprintf(stderr, "error: semantic version is too complex for this implementation\n");
+        cli_fprintf(stderr, "error: semantic version is too complex for this implementation\n");
         return EXIT_GENERAL_ERROR;
     }
     else if (err != SEMY_NO_ERROR)
     {
-        fprintf(stderr, "error: internal malfunction\n");
+        cli_fprintf(stderr, "error: internal malfunction\n");
         return EXIT_GENERAL_ERROR;
     }
     return EXIT_SUCCESS;
@@ -85,7 +93,7 @@ static int do_sort(int argc, char *argv[])
     struct semver *semvers = calloc(argc, sizeof(semvers[0]));
     if (semvers == NULL)
     {
-        fprintf(stderr, "error: memory allocation failed\n");
+        cli_fprintf(stderr, "error: memory allocation failed\n");
         return EXIT_GENERAL_ERROR;
     }
 
@@ -104,7 +112,7 @@ static int do_sort(int argc, char *argv[])
 
     for (int i = 0; i < argc; i++)
     {
-        puts(semvers[i].string);
+        cli_puts(semvers[i].string);
     }
 
     free(semvers);
@@ -118,7 +126,7 @@ static int do_compare(int argc, char *argv[])
 
     if (argc != 2)
     {
-        fprintf(stderr, "error: expected exactly two version strings\n");
+        cli_fprintf(stderr, "error: expected exactly two version strings\n");
         return EXIT_INVALID_OPTION;
     }
 
@@ -134,7 +142,7 @@ static int do_compare(int argc, char *argv[])
     int32_t result = 0;
     semy_compare(&semvers[0], &semvers[1], &result);
 
-    printf("%d\n", result);
+    cli_fprintf(stdout, "%d\n", result);
     return EXIT_SUCCESS;
 }
 
@@ -152,13 +160,13 @@ static int do_decompose(const char *format, int argc, char *argv[])
     }
     else
     {
-        fprintf(stderr, "error: invalid format: '%s'\n", format);
+        cli_fprintf(stderr, "error: invalid format: '%s'\n", format);
         return EXIT_INVALID_OPTION;
     }
 
     if (argc != 1)
     {
-        fprintf(stderr, "error: expected exactly one version string\n");
+        cli_fprintf(stderr, "error: expected exactly one version string\n");
         return EXIT_INVALID_OPTION;
     }
 
@@ -171,100 +179,100 @@ static int do_decompose(const char *format, int argc, char *argv[])
 
     if (target == JSON)
     {
-        puts("{");
-        printf("    \"raw\": \"%s\",\n", argv[0]);
-        printf("    \"major\": %d,\n", semy_get_major(&semver));
-        printf("    \"minor\": %d,\n", semy_get_minor(&semver));
-        printf("    \"patch\": %d,\n", semy_get_patch(&semver));
+        cli_puts("{");
+        cli_fprintf(stdout, "    \"raw\": \"%s\",\n", argv[0]);
+        cli_fprintf(stdout, "    \"major\": %d,\n", semy_get_major(&semver));
+        cli_fprintf(stdout, "    \"minor\": %d,\n", semy_get_minor(&semver));
+        cli_fprintf(stdout, "    \"patch\": %d,\n", semy_get_patch(&semver));
 
         const int32_t pre_release_count = semy_get_pre_release_count(&semver);
         if (pre_release_count > 0)
         {
-            puts("    \"preRelease\": [");
+            cli_puts("    \"preRelease\": [");
             for (int32_t i = 0; i < pre_release_count; i++)
             {
-                printf("        \"%s\"", semy_get_pre_release(&semver, i));
+                cli_fprintf(stdout, "        \"%s\"", semy_get_pre_release(&semver, i));
                 if (i < pre_release_count - 1)
                 {
-                    puts(",");
+                    cli_puts(",");
                 }
                 else
                 {
-                    puts("");
+                    cli_puts("");
                 }
             }
-            puts("    ],");
+            cli_puts("    ],");
         }
         else
         {
-            puts("    \"preRelease\": [],");
+            cli_puts("    \"preRelease\": [],");
         }
 
         const int32_t build_metadata_count = semy_get_build_count(&semver);
         if (build_metadata_count > 0)
         {
-            puts("    \"buildMetadata\": [");
+            cli_puts("    \"buildMetadata\": [");
             for (int32_t i = 0; i < build_metadata_count; i++)
             {
-                printf("        \"%s\"", semy_get_build(&semver, i));
+                cli_fprintf(stdout, "        \"%s\"", semy_get_build(&semver, i));
                 if (i < build_metadata_count - 1)
                 {
-                    puts(",");
+                    cli_puts(",");
                 }
                 else
                 {
-                    puts("");
+                    cli_puts("");
                 }
             }
-            puts("    ]");
+            cli_puts("    ]");
         }
         else
         {
-            puts("    \"buildMetadata\": []");
+            cli_puts("    \"buildMetadata\": []");
         }
 
-        puts("}");
+        cli_puts("}");
     }
     else
     {
-        puts("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-        puts("<semver>");
-        printf("    <raw>%s</raw>\n", argv[0]);
-        printf("    <major>%d</major>\n", semy_get_major(&semver));
-        printf("    <minor>%d</minor>\n", semy_get_minor(&semver));
-        printf("    <patch>%d</patch>\n", semy_get_patch(&semver));
+        cli_puts("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+        cli_puts("<semver>");
+        cli_fprintf(stdout, "    <raw>%s</raw>\n", argv[0]);
+        cli_fprintf(stdout, "    <major>%d</major>\n", semy_get_major(&semver));
+        cli_fprintf(stdout, "    <minor>%d</minor>\n", semy_get_minor(&semver));
+        cli_fprintf(stdout, "    <patch>%d</patch>\n", semy_get_patch(&semver));
 
         const int32_t pre_release_count = semy_get_pre_release_count(&semver);
         if (pre_release_count > 0)
         {
-            puts("    <preRelease>");
+            cli_puts("    <preRelease>");
             for (int32_t i = 0; i < pre_release_count; i++)
             {
-                printf("        <identifier>%s</identifier>\n", semy_get_pre_release(&semver, i));
+                cli_fprintf(stdout, "        <identifier>%s</identifier>\n", semy_get_pre_release(&semver, i));
             }
-            puts("    </preRelease>");
+            cli_puts("    </preRelease>");
         }
         else
         {
-            puts("    <preRelease></preRelease>");
+            cli_puts("    <preRelease></preRelease>");
         }
 
         const int32_t build_metadata_count = semy_get_build_count(&semver);
         if (build_metadata_count > 0)
         {
-            puts("    <buildMetadata>");
+            cli_puts("    <buildMetadata>");
             for (int32_t i = 0; i < build_metadata_count; i++)
             {
-                printf("        <identifier>%s</identifier>\n", semy_get_build(&semver, i));
+                cli_fprintf(stdout, "        <identifier>%s</identifier>\n", semy_get_build(&semver, i));
             }
-            puts("    </buildMetadata>");
+            cli_puts("    </buildMetadata>");
         }
         else
         {
-            puts("    <buildMetadata></buildMetadata>");
+            cli_puts("    <buildMetadata></buildMetadata>");
         }
 
-        puts("</semver>");
+        cli_puts("</semver>");
     }
 
     return EXIT_SUCCESS;
@@ -272,64 +280,64 @@ static int do_decompose(const char *format, int argc, char *argv[])
 
 static void print_usage(void)
 {
-    puts("Usage:");
-    puts("");
-    puts("  semver --compare <version1> <version2>");
-    puts("  semver --decompose=<format> <version>");
-    puts("  semver --sort <version>...");
-    puts("  semver --validate <version>...");
-    puts("");
+    cli_puts("Usage:");
+    cli_puts("");
+    cli_puts("  semver --compare <version1> <version2>");
+    cli_puts("  semver --decompose=<format> <version>");
+    cli_puts("  semver --sort <version>...");
+    cli_puts("  semver --validate <version>...");
+    cli_puts("");
 }
 
 static int do_usage(void)
 {
     print_usage();
-    puts("Run 'semver --help' for more information.");
-    puts("");
+    cli_puts("Run 'semver --help' for more information.");
+    cli_puts("");
     return EXIT_SUCCESS;
 }
 
 static int do_help(void)
 {
     print_usage();
-    puts("Options:");
-    puts("");
-    puts("  -c <v1> <version2>");
-    puts("  --compare <version1> <version2>");
-    puts("       Compare semantic versions 'v1' and 'v2' and print -1, 0, 1 depending");
-    puts("       on if v1 < v2, v1 = v2, v1 > v2 (respectively).");
-    puts("");
-    puts("  -d<format> <version>");
-    puts("  -decompose=<format> <version>");
-    puts("       Decompose a semantic version into its identifiers.");
-    puts("");
-    puts("  -s <versions>...");
-    puts("  --sort <versions>...");
-    puts("       Sort semantic versions and print them in ascending order on their");
-    puts("       own line to stdout.");
-    puts("");
-    puts("  -V <versions>...");
-    puts("  --validate <versions>...");
-    puts("       Validate one or more semantic versions. If any semantic version is");
-    puts("       invalid, the exit status will be 1.");
-    puts("");
-    puts("Exit status:");
-    puts("  0  if OK,");
-    puts("  1  if one or more semantic versions are malformed,");
-    puts("  2  if the program arguments are incorrect,");
-    puts("  3  if a general error occurred while processing the input.");
-    puts("");
-    puts("This program is distributed under the MIT License.");
+    cli_puts("Options:");
+    cli_puts("");
+    cli_puts("  -c <v1> <version2>");
+    cli_puts("  --compare <version1> <version2>");
+    cli_puts("       Compare semantic versions 'v1' and 'v2' and print -1, 0, 1 depending");
+    cli_puts("       on if v1 < v2, v1 = v2, v1 > v2 (respectively).");
+    cli_puts("");
+    cli_puts("  -d<format> <version>");
+    cli_puts("  -decompose=<format> <version>");
+    cli_puts("       Decompose a semantic version into its identifiers.");
+    cli_puts("");
+    cli_puts("  -s <versions>...");
+    cli_puts("  --sort <versions>...");
+    cli_puts("       Sort semantic versions and print them in ascending order on their");
+    cli_puts("       own line to stdout.");
+    cli_puts("");
+    cli_puts("  -V <versions>...");
+    cli_puts("  --validate <versions>...");
+    cli_puts("       Validate one or more semantic versions. If any semantic version is");
+    cli_puts("       invalid, the exit status will be 1.");
+    cli_puts("");
+    cli_puts("Exit status:");
+    cli_puts("  0  if OK,");
+    cli_puts("  1  if one or more semantic versions are malformed,");
+    cli_puts("  2  if the program arguments are incorrect,");
+    cli_puts("  3  if a general error occurred while processing the input.");
+    cli_puts("");
+    cli_puts("This program is distributed under the MIT License.");
     return EXIT_SUCCESS;
 }
 
 static int do_version(void)
 {
-    puts("1.0.0-alpha");
+    cli_puts("1.0.0-alpha");
     return EXIT_SUCCESS;
 }
 
-int cli_main(int argc, char *argv[])
+static int cli_main(int argc, char *argv[])
 {
     if (argc > 1)
     {
@@ -381,14 +389,24 @@ int cli_main(int argc, char *argv[])
         
         if (arg[0] == '-')
         {
-            fprintf(stderr, "error: invalid argument '%s'\n", arg);
+            cli_fprintf(stderr, "error: invalid argument '%s'\n", arg);
             return EXIT_INVALID_OPTION;
         }
     }
     return do_usage();
 }
 
+#ifndef UNIT_TESTING
 int main(int argc, char *argv[])
 {
     return cli_main(argc, argv);
 }
+
+void cli_fprintf(FILE *stream, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    vfprintf(stream, format, args);
+    va_end(args);
+}
+#endif
