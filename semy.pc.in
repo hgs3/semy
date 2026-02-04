@@ -1,0 +1,12 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Semy
+Description: Semantic Versioning 2.0.0 parser and processor.
+Version: @VERSION@
+URL: https://github.com/hgs3/semy
+
+Cflags: -I${includedir}
+Libs: -L${libdir} -lsemy

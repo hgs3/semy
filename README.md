@@ -1,6 +1,6 @@
 # Semy
 
-Semy (pronounced _"SEM-ee"_) is a [Semantic Version 2.0.0](https://semver.org/) parser and processor written in C11 with no external dependencies and no dynamic memory allocation.
+Semy (pronounced _SEM-ee_) is a [Semantic Version 2.0.0](https://semver.org/) parser and processor written in C11 with no external dependencies and no dynamic memory allocation.
 
 [![Build Status](https://github.com/hgs3/semy/actions/workflows/build.yml/badge.svg)](https://github.com/hgs3/semy/actions/workflows/build.yml)
 
@@ -28,7 +28,7 @@ Two or more semantic versions can be sorted with the -s option.
 The sorted semantic versions are printed in ascending order on their own line.
 
 ```bash
-$ semy -s 2.0.0 2.0.0-rc.1 2.0.0-beta.11 2.0.0-beta.2 \\
+$ semy -s 2.0.0 2.0.0-rc.1 2.0.0-beta.11 2.0.0-beta.2 \
           2.0.0-beta 2.0.0-alpha.beta 2.0.0-alpha.1 2.0.0-alpha
 2.0.0-alpha
 2.0.0-alpha.1
@@ -46,9 +46,9 @@ Semantic versions 'v1' and 'v2' can be compared with the -c option.
 The integer -1, 0, 1 is printed depending on if v1 < v2, v1 = v2, v1 > v2.
 
 ```bash
-$ semy -c 1.0.4 2.0.0
+$ semy -c 0.9.1 0.10.0
 -1
-$ semy -c 3.0.0 3.0.0
+$ semy -c 2.0.0 2.0.0
 0
 $ semy -c 1.0.0-beta 1.0.0-alpha
 1
@@ -81,12 +81,16 @@ See [semy.h](semy.h) for documentation.
 ```c
 #include <semy.h>
 #include <stdio.h>
-int main(int argc, char *argv[]) {
+
+int main(int argc, char *argv[])
+{
     semy_t semver;
-    semy_init(&semver, sizeof(semver), "1.0.0");
+    semy_parse(&semver, sizeof(semver), "1.0.0");
+
     printf("major: %d\n", semy_get_major(&semver));
     printf("minor: %d\n", semy_get_minor(&semver));
     printf("patch: %d\n", semy_get_patch(&semver));
+
     return 0;
 }
 ```

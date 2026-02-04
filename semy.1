@@ -1,0 +1,123 @@
+.\" Permission is granted to make and distribute verbatim copies of this
+.\" manual provided the copyright notice and this permission notice are
+.\" preserved on all copies.
+.\"
+.\" Permission is granted to copy and distribute modified versions of this
+.\" manual under the conditions for verbatim copying, provided that the
+.\" entire resulting derived work is distributed under the terms of a
+.\" permission notice identical to this one.
+.\" --------------------------------------------------------------------------
+.TH "SEMY" "1" "February 2th 2026" "Semy 1.0.0-alpha"
+.SH NAME
+semy \- semantic version processor
+.\" --------------------------------------------------------------------------
+.SH SYNOPSIS
+.nf
+.B semy
+.fi
+.\" --------------------------------------------------------------------------
+.SH DESCRIPTION
+Semy is a parser and processor for Semantic Versioning 2.0.0 (SemVer).
+With Semy you can parse semantic versions, extract version identifiers, compare them for equality, and check if a version is newer or older than another.
+.\" --------------------------------------------------------------------------
+.SH OPTIONS
+.TP
+.B "\-c \fIv1\fP \fIv2\fP"
+.TQ
+.B "\-\-compare \fIv1\fP \fIv2\fP"
+Compare semantic versions \fIv1\fR and \fIv2\fR and print either -1, 0, 1 depending on if \fIv1\fR < \fIv2\fR, \fIv1\fR = \fIv2\fR, \fIv1\fR > \fIv2\fR respectively.
+.TP
+.B "\-d\fIformat\fP"
+.TQ
+.B "\-\-decompose=\fIformat\fP"
+Decompose \fIversion\fR into its version identifiers and print them in a structured format.
+Version identifiers include: the major, minor, and patch identifiers, pre-release identifiers, and build metadata identifiers.
+Where a valid \fIformat\fR is one of:
+.RS
+.IP \(bu 2
+\fBjson\fP
+.IP \(bu 2
+\fBxml\fP
+.RE
+.TP
+.B "\-s \fIversion\fP..."
+.TQ
+.B "\-\-sort \fIversion\fP..."
+Sort semantic versions and print them in ascending order, separated by a new line character.
+.TP
+.B "\-V \fIversion\fP..."
+.TQ
+.B "\-\-validate \fIversion\fP..."
+Validate one or more semantic versions.
+If any semantic version is malformed, the exit code will be 1.
+.\" --------------------------------------------------------------------------
+.SH RETURN CODES
+Returns \fB0\fR on success, \fB1\fR a semantic version is malformed, \fB2\fR if the program arguments are incorrect, and \fB3\fR if a general error occurred while processing the input.
+.\" --------------------------------------------------------------------------
+.SH EXAMPLE
+Two or more semantic versions can be sorted with the -s option.
+The sorted semantic versions are printed in ascending order on their own line.
+.PP
+.in +4n
+.EX
+$ semy -s 2.0.0 2.0.0-rc.1 2.0.0-beta.11 2.0.0-beta.2 \\
+          2.0.0-beta 2.0.0-alpha.beta 2.0.0-alpha.1 2.0.0-alpha
+2.0.0-alpha
+2.0.0-alpha.1
+2.0.0-alpha.beta
+2.0.0-beta
+2.0.0-beta.2
+2.0.0-beta.11
+2.0.0-rc.1
+2.0.0
+.EE
+.in
+.PP
+Semantic versions v1 and v2 can be compared with the -c option.
+The integer -1, 0, 1 is printed to \fIstdout\fR depending on if v1 < v2, v1 = v2, v1 > v2.
+.PP
+.in +4n
+.EX
+$ semy -c 1.0.4 2.0.0
+-1
+$ semy -c 3.0.0 3.0.0
+0
+$ semy -c 1.0.0-beta 1.0.0-alpha
+1
+.EE
+.in
+.PP
+A semantic version can be decomposed into its version identifiers with the -c option.
+You can decompose a version to either JSON or XML.
+.PP
+.in +4n
+.EX
+$ semy -djson 1.2.3-beta
+{
+    "raw": "1.2.3-beta",
+    "major": 1,
+    "minor": 2,
+    "patch": 3,
+    "preRelease": [
+        "beta"
+    ],
+    "buildMetadata": []
+}
+.EE
+.in
+.\" --------------------------------------------------------------------------
+.SH INTERNET RESOURCES
+The source code for Semy is published at
+.UR https://github.com/hgs3/semy
+https://github.com/hgs3/semy
+.UE .
+If you need support or encounter a bug, then please report it on the issue tracker.
+.PP
+The Semantic Versioning 2.0.0 specification is published at
+.UR https://semver.org
+https://semver.org
+.UE .
+.\" --------------------------------------------------------------------------
+.SH LICENSING
+Semy is Open Source software distributed under the MIT License.
+Please see the LICENSE file included with the Confetti distribution for details.

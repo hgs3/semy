@@ -1,0 +1,42 @@
+# On Windows the header and library are installed in the same directory as this
+# script is therefore the following function is called to obtain its path.
+get_filename_component(SEMY_CONFIG_DIR "${CMAKE_CURRENT_LIST_FILE}" DIRECTORY)
+
+# Find header.
+find_path(SEMY_INCLUDE_DIR semy.h
+          HINTS /usr/local/include /usr/include ${SEMY_CONFIG_DIR})
+
+# Find library.
+find_library(SEMY_LIBRARY
+             NAMES Semy semy
+             HINTS /usr/local/lib /usr/lib ${SEMY_CONFIG_DIR})
+
+# Not needed anymore.
+unset(SEMY_CONFIG_DIR)
+
+# Use version specified in top-level CMakeLists.txt
+set(SEMY_VERSION "@PROJECT_VERSION@")
+
+# Handle the QUIETLY and REQUIRED arguments and set SEMY_FOUND to TRUE if all listed variables are TRUE.
+include(FindPackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(Semy
+                                  FOUND_VAR SEMY_FOUND
+                                  REQUIRED_VARS SEMY_LIBRARY SEMY_INCLUDE_DIR
+                                  VERSION_VAR SEMY_VERSION)
+
+# Set result variables.
+if(SEMY_FOUND)
+    set(SEMY_LIBRARIES ${SEMY_LIBRARY})
+    set(SEMY_INCLUDE_DIRS ${SEMY_INCLUDE_DIR})
+endif()
+
+# Export a module.
+if(SEMY_FOUND AND NOT TARGET Semy::Semy)
+    add_library(Semy::Semy UNKNOWN IMPORTED)
+    set_target_properties(Semy::Semy PROPERTIES
+                          IMPORTED_LOCATION "${SEMY_LIBRARY}"
+                          INTERFACE_INCLUDE_DIRECTORIES "${SEMY_INCLUDE_DIR}")
+endif()
+
+# Cached variables should be hidden in the CMake interface unless the user explicitly asks to edit them.
+mark_as_advanced(SEMY_INCLUDE_DIR SEMY_LIBRARY)
