@@ -540,7 +540,7 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
         }
     }
 
-    struct semVer *sv = (struct semVer *)semver;
+    struct semVer *sv = (struct semVer *)semver->buf;
     static_assert(sizeof(sv->strings) > MAX_VERSION_LENGTH, "expected enough buffer space to contain string content");
     memset(sv, 0, sizeof(sv[0]));
 
@@ -561,7 +561,7 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
 
 SEMY_API int32_t semy_get_major(const semy_t *semver)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (sv == NULL)
     {
         return -1;
@@ -571,7 +571,7 @@ SEMY_API int32_t semy_get_major(const semy_t *semver)
 
 SEMY_API int32_t semy_get_minor(const semy_t *semver)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (sv == NULL)
     {
         return -1;
@@ -581,7 +581,7 @@ SEMY_API int32_t semy_get_minor(const semy_t *semver)
 
 SEMY_API int32_t semy_get_patch(const semy_t *semver)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (sv == NULL)
     {
         return -1;
@@ -591,7 +591,7 @@ SEMY_API int32_t semy_get_patch(const semy_t *semver)
 
 SEMY_API int32_t semy_get_pre_release_count(const semy_t *semver)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (sv == NULL)
     {
         return -1;
@@ -601,7 +601,7 @@ SEMY_API int32_t semy_get_pre_release_count(const semy_t *semver)
 
 SEMY_API const char *semy_get_pre_release(const semy_t *semver, int32_t index)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (sv == NULL)
     {
         return NULL;
@@ -618,7 +618,7 @@ SEMY_API const char *semy_get_pre_release(const semy_t *semver, int32_t index)
 
 SEMY_API int32_t semy_get_build_count(const semy_t *semver)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (sv == NULL)
     {
         return -1;
@@ -628,7 +628,7 @@ SEMY_API int32_t semy_get_build_count(const semy_t *semver)
 
 SEMY_API const char *semy_get_build(const semy_t *semver, int32_t index)
 {
-    const struct semVer *sv = (const struct semVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver->buf;
     if (semver == NULL)
     {
         return NULL;
@@ -644,8 +644,8 @@ SEMY_API const char *semy_get_build(const semy_t *semver, int32_t index)
 
 SEMY_API semy_error_t semy_compare(const semy_t *sv1, const semy_t *sv2, int32_t *result)
 {
-    const struct semVer *a = (const struct semVer *)sv1;
-    const struct semVer *b = (const struct semVer *)sv2;
+    const struct semVer *a = (const struct semVer *)sv1->buf;
+    const struct semVer *b = (const struct semVer *)sv2->buf;
 
     if (a == NULL)
     {
