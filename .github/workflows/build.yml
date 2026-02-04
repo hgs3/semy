@@ -22,6 +22,7 @@ jobs:
       run: |
         curl -L -o audition.deb https://github.com/railgunlabs/audition/releases/download/v1.0.5/libaudition_1.0.5-1_amd64.deb
         sudo dpkg -i audition.deb
+        sudo apt install lcov
     - name: Build and Test
       env:
         CC: ${{ matrix.platform.CC }}
@@ -37,3 +38,17 @@ jobs:
         ./configure --verbose
         make
         make distcheck
+    - name: Clang Sanitizers
+      if: matrix.platform.CC == 'clang'
+      env:
+        CC: ${{ matrix.platform.CC }}
+      run: |
+        cd tests
+        ./run-clang-sanitizers.sh
+    - name: Code Coverage
+      if: matrix.platform.CC == 'gcc'
+      env:
+        CC: ${{ matrix.platform.CC }}
+      run: |
+        cd tests
+        ./run-coverage-check.sh

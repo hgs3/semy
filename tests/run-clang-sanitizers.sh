@@ -3,6 +3,11 @@
 # This script runs Clang sanitizers (UBSAN, ASAN, and MSAN).
 # You must run this script from this directory.
 
+# Verify Clang is installed.
+if ! command -v clang &> /dev/null; then
+    echo "clang could not be found; please install it to gather code coverage"
+    exit 1
+fi
 export CC=clang
 
 # Undefined behavior sanitizer.

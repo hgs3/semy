@@ -3,6 +3,17 @@
 # This script gathers code coverage metrics and generates an HTML report.
 # You must run this script from this directory.
 
+# Verify LCOV is installed.
+if ! command -v lcov &> /dev/null; then
+    echo "lcov could not be found; please install it to gather code coverage"
+    exit 1
+fi
+
+# Verify GCC is installed.
+if ! command -v gcc &> /dev/null; then
+    echo "gcc could not be found; please install it to gather code coverage"
+    exit 1
+fi
 export CC=gcc
 
 # Build the project and execute the tests to generate a coverage report.
