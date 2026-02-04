@@ -46,9 +46,9 @@ Semantic versions 'v1' and 'v2' can be compared with the -c option.
 The integer -1, 0, 1 is printed depending on if v1 < v2, v1 = v2, v1 > v2.
 
 ```bash
-$ semy -c 1.0.4 2.0.0
+$ semy -c 0.9.1 0.10.0
 -1
-$ semy -c 3.0.0 3.0.0
+$ semy -c 2.0.0 2.0.0
 0
 $ semy -c 1.0.0-beta 1.0.0-alpha
 1
