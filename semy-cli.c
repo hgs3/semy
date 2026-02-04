@@ -338,7 +338,7 @@ static int do_help(void)
 
 static int do_version(void)
 {
-    cli_puts("1.0.0-alpha");
+    cli_puts("0.9.0");
     return EXIT_SUCCESS;
 }
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(Semy LANGUAGES C VERSION 1.0.0)
+project(Semy LANGUAGES C VERSION 0.9.0)
 
 include(CMakePackageConfigHelpers)
 
