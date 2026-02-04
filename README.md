@@ -27,10 +27,10 @@ Semy includes a command-line interface for validating, comparing, sorting and de
 Check if one or more semantic versions are well-formed according to the Semantic Version 2.0.0 specification.
 
 ```bash
-$ semy -V 1.0.0-beta
+$ semy -v 1.0.0-beta
 $ echo $?
 0
-$ semy -V 1.0.0beta
+$ semy -v 1.0.0beta
 $ echo $?
 1
 ```

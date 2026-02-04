@@ -38,7 +38,7 @@ static const char *const help_message =
     "       Sort semantic versions and print them in ascending order on their\n"
     "       own line to stdout.\n"
     "\n"
-    "  -V <versions>...\n"
+    "  -v <versions>...\n"
     "  --validate <versions>...\n"
     "       Validate one or more semantic versions. If any semantic version is\n"
     "       invalid, the exit status will be 1.\n"

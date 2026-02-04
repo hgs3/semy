@@ -12,31 +12,35 @@
 semy \- semantic version processor
 .\" --------------------------------------------------------------------------
 .SH SYNOPSIS
-.nf
-.B semy
-.fi
+\fBsemy\fR \fB\--validate \fIversion\fR...
+.br
+\fBsemy\fR \fB\--compare \fIv1\fR \fIv2\fR
+.br
+\fBsemy\fR \fB\--sort \fIversion\fR...
+.br
+\fBsemy\fR \fB\-\-decompose=\fR\fIformat\fR \fIversion\fR
 .\" --------------------------------------------------------------------------
 .SH DESCRIPTION
 Semy is a parser and processor for Semantic Versioning 2.0.0 (SemVer).
-With Semy you can parse semantic versions, extract version identifiers, compare them for equality, and check if a version is newer or older than another.
+Semy can validate semantic versions, extract version identifiers, compare them for equality, and check if a version is newer or older than another.
 .\" --------------------------------------------------------------------------
 .SH OPTIONS
 .TP
-.B "\-V \fIversion\fP..."
+.B "\-v"
 .TQ
-.B "\-\-validate \fIversion\fP..."
+.B "\-\-validate"
 Validate one or more semantic versions.
 If any semantic version is malformed, the exit code will be 1.
 .TP
-.B "\-c \fIv1\fP \fIv2\fP"
+.B "\-c"
 .TQ
-.B "\-\-compare \fIv1\fP \fIv2\fP"
+.B "\-\-compare"
 Compare semantic versions \fIv1\fR and \fIv2\fR and print either -1, 0, 1 depending on if \fIv1\fR < \fIv2\fR, \fIv1\fR = \fIv2\fR, \fIv1\fR > \fIv2\fR respectively.
 .TP
-.B "\-s \fIversion\fP..."
+.B "\-s"
 .TQ
-.B "\-\-sort \fIversion\fP..."
-Sort semantic versions and print them in ascending order, separated by a new line character.
+.B "\-\-sort"
+Sort two or more semantic versions and print them in ascending order, separated by a new line character.
 .TP
 .B "\-d\fIformat\fP"
 .TQ
@@ -59,10 +63,10 @@ Check if one or more semantic versions are well-formed according to the Semantic
 .PP
 .in +4n
 .EX
-$ semy -V 1.0.0-beta
+$ semy -v 1.0.0-beta
 $ echo $?
 0
-$ semy -V 1.0.0beta
+$ semy -v 1.0.0beta
 $ echo $?
 1
 .EE

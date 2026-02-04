@@ -9,4 +9,4 @@ export CC=afl-cc
 
 cmake .. -B fuzz-build -DSEMY_BUILD_TESTS=ON
 cmake --build fuzz-build
-afl-fuzz -t 250 -i ./corpus -o . -S fuzz-state -- ./fuzz-build/semy -V @@
+afl-fuzz -t 250 -i ./corpus -o . -S fuzz-state -- ./fuzz-build/semy -v @@
