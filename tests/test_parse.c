@@ -160,7 +160,7 @@ TEST(semver, parse, .iterations=COUNT_OF(test_cases))
         return;
     }
 
-    char output[4096] = {0};
+    char output[2096] = {0};
     sprintf(output, "%d.%d.%d", semy_get_major(&semver), semy_get_minor(&semver), semy_get_patch(&semver));
 
     int32_t count = semy_get_pre_release_count(&semver);
@@ -199,7 +199,7 @@ TEST(semver, init_exceed_string_length_limit)
 {
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
-    char input[1002] = {0};
+    char input[502] = {0};
 
     // Construct an extreamlly long but valid semantic version.
     // In this case "1.0.0-aaaaaaaaa...aaaaaaaaa\0" where the ellipses expands to lots of 'a' characters.
@@ -214,7 +214,7 @@ TEST(semver, init_close_to_but_not_exeeding_string_limit)
 {
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
-    char input[1001] = {0};
+    char input[501] = {0};
 
     // Construct an extreamlly long but valid semantic version.
     // In this case "1.0.0-aaaaaaaaa...aaaaaaaaa\0" where the ellipses expands to lots of 'a' characters.
@@ -229,10 +229,10 @@ TEST(semver, init_too_many_pre_release_identifiers)
 {
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
-    char input[1001] = {0};
+    char input[501] = {0};
 
     memcpy(input, "1.0.0-", 6);
-    for (int i = 6; i < 1000; i++)
+    for (int i = 6; i < 500; i++)
     {
         if ((i % 2) == 0)
         {
@@ -252,10 +252,10 @@ TEST(semver, init_too_many_build_identifiers)
 {
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
-    char input[1001] = {0};
+    char input[501] = {0};
 
     memcpy(input, "1.0.0+", 6);
-    for (int i = 6; i < 1000; i++)
+    for (int i = 6; i < 500; i++)
     {
         if ((i % 2) == 0)
         {

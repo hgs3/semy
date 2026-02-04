@@ -16,8 +16,8 @@
 #include <string.h>
 #include <assert.h>
 
-#define MAX_VERSION_LENGTH 1000
-#define MAX_IDENTIFIERS 100
+#define MAX_VERSION_LENGTH 500
+#define MAX_IDENTIFIERS 50
 
 typedef uint16_t stringIndice_t;
 
@@ -44,7 +44,7 @@ struct semVer
     stringIndice_t chars_allocated;
     struct preRelease pre_release[MAX_IDENTIFIERS];
     stringIndice_t build_metadata[MAX_IDENTIFIERS];
-    char strings[1032];
+    char strings[532];
 };
 
 static_assert(sizeof(struct semVer) == sizeof(semy_t), "expected matching structure size");
@@ -63,7 +63,7 @@ static_assert((offsetof(struct preRelease, numeric_value) % 4) == 0, "expected 3
 static_assert((offsetof(struct preRelease, string_value) % 2) == 0, "expected 16-bit alignment");
 static_assert((offsetof(struct preRelease, is_alphanumeric) % 2) == 0, "expected 16-bit alignment");
 
-static_assert(sizeof(semy_t) == 2048, "expected 2 kb");
+static_assert(sizeof(semy_t) == 1048, "expected 1 kb");
 static_assert(sizeof(semy_error_t) == 4, "expected 4 bytes");
 
 #define CHAR_IS_LETTER 0x1

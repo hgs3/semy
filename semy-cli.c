@@ -110,6 +110,7 @@ static int do_sort(int argc, char *argv[])
         const int r = parse(semver->string, &semver->value);
         if (r != EXIT_SUCCESS)
         {
+            free(semvers);
             return r;
         }
     }
