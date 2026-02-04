@@ -229,7 +229,7 @@ TEST(semver, init_too_many_pre_release_identifiers)
 {
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
-    char input[201] = {0};
+    char input[200] = {0};
 
     memcpy(input, "1.0.0-", 6);
     for (int i = 6; i < COUNT_OF(input); i++)
@@ -252,7 +252,7 @@ TEST(semver, init_too_many_build_identifiers)
 {
     semy_error_t err = SEMY_NO_ERROR;
     semy_t semver = {0};
-    char input[201] = {0};
+    char input[200] = {0};
 
     memcpy(input, "1.0.0+", 6);
     for (int i = 6; i < COUNT_OF(input); i++)
