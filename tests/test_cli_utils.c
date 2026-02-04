@@ -65,8 +65,8 @@ void run_cli_test(const struct CommandLineTestCase *test_case)
     }
 
     const int exit_code = cli_main(argc, (char **)test_case->argv);
-    ASSERT_EQ(test_case->exit_code, exit_code);
+    EXPECT_EQ(test_case->exit_code, exit_code);
 
-    ASSERT_STR_EQ(test_case->out, captured_stdout.buffer);
-    ASSERT_STR_EQ(test_case->err, captured_stderr.buffer);
+    EXPECT_STR_EQ(test_case->out, captured_stdout.buffer);
+    EXPECT_STR_EQ(test_case->err, captured_stderr.buffer);
 }

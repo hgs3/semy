@@ -16,6 +16,19 @@
 
 static const struct CommandLineTestCase test_cases[] = {
     {
+        {"semy", "--decompose=json", "1.2.3"},
+        EXIT_SUCCESS,
+        "{\n"
+        "    \"raw\": \"1.2.3\",\n"
+        "    \"major\": 1,\n"
+        "    \"minor\": 2,\n"
+        "    \"patch\": 3,\n"
+        "    \"preRelease\": [],\n"
+        "    \"buildMetadata\": []\n"
+        "}\n",
+        "",
+    },
+    {
         {"semy", "-djson", "1.2.3"},
         EXIT_SUCCESS,
         "{\n"
@@ -27,6 +40,77 @@ static const struct CommandLineTestCase test_cases[] = {
         "    \"buildMetadata\": []\n"
         "}\n",
         "",
+    },
+    {
+        {"semy", "-djson", "1.2.3-alpha.1+build.20120313144700"},
+        EXIT_SUCCESS,
+        "{\n"
+        "    \"raw\": \"1.2.3-alpha.1+build.20120313144700\",\n"
+        "    \"major\": 1,\n"
+        "    \"minor\": 2,\n"
+        "    \"patch\": 3,\n"
+        "    \"preRelease\": [\n"
+        "        \"alpha\",\n"
+        "        \"1\"\n"
+        "    ],\n"
+        "    \"buildMetadata\": [\n"
+        "        \"build\",\n"
+        "        \"20120313144700\"\n"
+        "    ]\n"
+        "}\n",
+        "",
+    },
+    {
+        {"semy", "-dxml", "1.2.3"},
+        EXIT_SUCCESS,
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+        "<semver>\n"
+        "    <raw>1.2.3</raw>\n"
+        "    <major>1</major>\n"
+        "    <minor>2</minor>\n"
+        "    <patch>3</patch>\n"
+        "    <preRelease></preRelease>\n"
+        "    <buildMetadata></buildMetadata>\n"
+        "</semver>\n",
+        "",
+    },
+    {
+        {"semy", "-dxml", "1.2.3-alpha.1+build.20120313144700"},
+        EXIT_SUCCESS,
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+        "<semver>\n"
+        "    <raw>1.2.3-alpha.1+build.20120313144700</raw>\n"
+        "    <major>1</major>\n"
+        "    <minor>2</minor>\n"
+        "    <patch>3</patch>\n"
+        "    <preRelease>\n"
+        "        <identifier>alpha</identifier>\n"
+        "        <identifier>1</identifier>\n"
+        "    </preRelease>\n"
+        "    <buildMetadata>\n"
+        "        <identifier>build</identifier>\n"
+        "        <identifier>20120313144700</identifier>\n"
+        "    </buildMetadata>\n"
+        "</semver>\n",
+        "",
+    },
+    {
+        {"semy", "-dxml", "1.2"},
+        1,
+        "",
+        "error: invalid semantic version\n",
+    },
+    {
+        {"semy", "-dxml"},
+        2,
+        "",
+        "error: expected exactly one version string\n",
+    },
+    {
+        {"semy", "-dyaml"},
+        2,
+        "",
+        "error: invalid format: 'yaml'\n",
     },
 };
 
