@@ -16,16 +16,28 @@
 
 static const struct CommandLineTestCase test_cases[] = {
     {
-        {"semy", "-v"},
+        {"semy", "--validate", "1.0.0"},
         0,
-        "1.0.0-alpha\n",
+        "",
         "",
     },
     {
-        {"semy", "--version"},
+        {"semy", "-V", "1.0.0"},
         0,
-        "1.0.0-alpha\n",
         "",
+        "",
+    },
+    {
+        {"semy", "-V", "1.0"},
+        1,
+        "",
+        "error: invalid semantic version\n",
+    },
+    {
+        {"semy", "-V", "2147483648.0.0"},
+        3,
+        "",
+        "error: semantic version is too complex for this implementation\n",
     },
 };
 

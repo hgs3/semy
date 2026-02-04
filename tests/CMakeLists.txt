@@ -19,6 +19,9 @@ register_test(test_parse test_parse.c)
 register_test(test_cli_decompose test_cli_decompose.c test_cli_utils.c)
 register_test(test_cli_sort test_cli_sort.c test_cli_utils.c)
 register_test(test_cli_version test_cli_version.c test_cli_utils.c)
+register_test(test_cli_help test_cli_help.c test_cli_utils.c)
+register_test(test_cli_misc test_cli_misc.c test_cli_utils.c)
+register_test(test_cli_validate test_cli_validate.c test_cli_utils.c)
 
 # Check if Clang is available as well as its fuzzer.
 # Note that fuzzing is only compatible with address sanitizer.

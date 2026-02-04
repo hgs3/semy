@@ -20,6 +20,7 @@
 #define EXIT_BAD_SYNTAX 1
 #define EXIT_INVALID_OPTION 2
 #define EXIT_GENERAL_ERROR 3
+#define EXIT_OUT_OF_MEMORY 4
 
 struct semver
 {
@@ -99,7 +100,7 @@ static int do_sort(int argc, char *argv[])
     if (semvers == NULL)
     {
         cli_fprintf(stderr, "error: memory allocation failed\n");
-        return EXIT_GENERAL_ERROR;
+        return EXIT_OUT_OF_MEMORY;
     }
 
     for (int i = 0; i < argc; i++)
@@ -298,7 +299,6 @@ static int do_usage(void)
 {
     print_usage();
     cli_puts("Run 'semver --help' for more information.");
-    cli_puts("");
     return EXIT_SUCCESS;
 }
 

@@ -84,7 +84,7 @@ static void oom_test(const struct CommandLineTestCase *test_case, const char *te
     for (int i = 0; i < 100; i++)
     {
         allowed_allocations = i;
-        if (cli_main(argc, argv) != EXIT_GENERAL_ERROR)
+        if (cli_main(argc, argv) != EXIT_OUT_OF_MEMORY)
         {
             return;
         }

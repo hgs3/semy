@@ -16,16 +16,23 @@
 
 static const struct CommandLineTestCase test_cases[] = {
     {
-        {"semy", "-v"},
+        {"semy"},
         0,
-        "1.0.0-alpha\n",
+        "Usage:\n"
+        "\n"
+        "  semver --compare <version1> <version2>\n"
+        "  semver --decompose=<format> <version>\n"
+        "  semver --sort <version>...\n"
+        "  semver --validate <version>...\n"
+        "\n"
+        "Run 'semver --help' for more information.\n",
         "",
     },
     {
-        {"semy", "--version"},
-        0,
-        "1.0.0-alpha\n",
+        {"semy", "-x"},
+        2,
         "",
+        "error: invalid argument '-x'\n",
     },
 };
 
