@@ -36,7 +36,7 @@ struct preRelease
     int16_t is_alphanumeric;
 };
 
-struct SemVer
+struct semVer
 {
     int32_t versions[VERSION_CORE_COUNT];
     uint8_t pre_release_count;
@@ -47,16 +47,16 @@ struct SemVer
     char strings[1032];
 };
 
-static_assert(sizeof(struct SemVer) == sizeof(semy_t), "expected matching structure size");
-static_assert((offsetof(struct SemVer, versions[VERSION_CORE_MAJOR]) % 4) == 0, "expected 32-bit alignment");
-static_assert((offsetof(struct SemVer, versions[VERSION_CORE_MINOR]) % 4) == 0, "expected 32-bit alignment");
-static_assert((offsetof(struct SemVer, versions[VERSION_CORE_PATCH]) % 4) == 0, "expected 32-bit alignment");
-static_assert((offsetof(struct SemVer, pre_release_count) % 1) == 0, "expected 8-bit alignment");
-static_assert((offsetof(struct SemVer, build_metadata_count) % 1) == 0, "expected 8-bit alignment");
-static_assert((offsetof(struct SemVer, chars_allocated) % 2) == 0, "expected 16-bit alignment");
-static_assert((offsetof(struct SemVer, pre_release) % 4) == 0, "expected 32-bit alignment");
-static_assert((offsetof(struct SemVer, build_metadata) % 2) == 0, "expected 16-bit alignment");
-static_assert((offsetof(struct SemVer, strings) % 1) == 0, "expected 8-bit alignment");
+static_assert(sizeof(struct semVer) == sizeof(semy_t), "expected matching structure size");
+static_assert((offsetof(struct semVer, versions[VERSION_CORE_MAJOR]) % 4) == 0, "expected 32-bit alignment");
+static_assert((offsetof(struct semVer, versions[VERSION_CORE_MINOR]) % 4) == 0, "expected 32-bit alignment");
+static_assert((offsetof(struct semVer, versions[VERSION_CORE_PATCH]) % 4) == 0, "expected 32-bit alignment");
+static_assert((offsetof(struct semVer, pre_release_count) % 1) == 0, "expected 8-bit alignment");
+static_assert((offsetof(struct semVer, build_metadata_count) % 1) == 0, "expected 8-bit alignment");
+static_assert((offsetof(struct semVer, chars_allocated) % 2) == 0, "expected 16-bit alignment");
+static_assert((offsetof(struct semVer, pre_release) % 4) == 0, "expected 32-bit alignment");
+static_assert((offsetof(struct semVer, build_metadata) % 2) == 0, "expected 16-bit alignment");
+static_assert((offsetof(struct semVer, strings) % 1) == 0, "expected 8-bit alignment");
 
 static_assert(sizeof(struct preRelease) == 8, "expected 32-bit size");
 static_assert((offsetof(struct preRelease, numeric_value) % 4) == 0, "expected 32-bit alignment");
@@ -183,7 +183,7 @@ static semy_error_t parse_numeric_identifier(const char *string, size_t *advance
 }
 
 // <version-core> ::= <major> "." <minor> "." <patch>
-static semy_error_t parse_version_core(struct SemVer *semver, const char *string, size_t *advance)
+static semy_error_t parse_version_core(struct semVer *semver, const char *string, size_t *advance)
 {
     const char *s = string;
     size_t len = 0;
@@ -327,7 +327,7 @@ static semy_error_t parse_pre_release_identifier(const char *string, size_t *adv
     return SEMY_BAD_SYNTAX;
 }
 
-static uint16_t add_string(struct SemVer *semver, const char *s, size_t slen)
+static uint16_t add_string(struct semVer *semver, const char *s, size_t slen)
 {   
     const uint16_t bytes_needed = (uint16_t)(slen + 1); // +1 for the null byte
     const uint16_t bytes_remaining = (uint16_t)(MAX_VERSION_LENGTH - semver->chars_allocated);
@@ -341,7 +341,7 @@ static uint16_t add_string(struct SemVer *semver, const char *s, size_t slen)
     return indice;
 }
 
-static semy_error_t add_pre_release_identifier(struct SemVer *semver, bool is_alnum, const char *s, size_t slen)
+static semy_error_t add_pre_release_identifier(struct semVer *semver, bool is_alnum, const char *s, size_t slen)
 {
     if (semver->pre_release_count >= MAX_IDENTIFIERS)
     {
@@ -369,7 +369,7 @@ static semy_error_t add_pre_release_identifier(struct SemVer *semver, bool is_al
 
 // <pre-release> ::= <pre-release-identifier>
 //                 | <pre-release-identifier> "." <pre-release>
-static semy_error_t parse_pre_release(struct SemVer *semver, const char *string, size_t *advance)
+static semy_error_t parse_pre_release(struct semVer *semver, const char *string, size_t *advance)
 {
     const char *s = string;
     size_t len = 0;
@@ -426,7 +426,7 @@ static semy_error_t parse_build_metadata(const char *string, size_t *advance)
     return err;
 }
 
-static semy_error_t add_build_metadata(struct SemVer *semver, const char *s, size_t slen)
+static semy_error_t add_build_metadata(struct semVer *semver, const char *s, size_t slen)
 {
     if (semver->build_metadata_count >= MAX_IDENTIFIERS)
     {
@@ -440,7 +440,7 @@ static semy_error_t add_build_metadata(struct SemVer *semver, const char *s, siz
 
 // <build> ::= <build-identifier>
 //           | <build-identifier> "." <build>
-static semy_error_t parse_build(struct SemVer *semver, const char *string, size_t *advance)
+static semy_error_t parse_build(struct semVer *semver, const char *string, size_t *advance)
 {
     const char *s = string;
     size_t len = 0;
@@ -474,7 +474,7 @@ static semy_error_t parse_build(struct SemVer *semver, const char *string, size_
 
 // <valid semver> ::= <version-core>
 //                  | <version-core> [ "-" <pre-release> [ "+" <build> ] ]
-static semy_error_t parse_semver(struct SemVer *semver, const char *string, size_t *advance)
+static semy_error_t parse_semver(struct semVer *semver, const char *string, size_t *advance)
 {
     const char *s = string;
     size_t len = 0;
@@ -525,7 +525,7 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
         return SEMY_INVALID_OPERATION;
     }
 
-    if (size != sizeof(struct SemVer))
+    if (size != sizeof(struct semVer))
     {
         return SEMY_INVALID_OPERATION;
     }
@@ -540,7 +540,7 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
         }
     }
 
-    struct SemVer *sv = (struct SemVer *)semver;
+    struct semVer *sv = (struct semVer *)semver;
     static_assert(sizeof(sv->strings) > MAX_VERSION_LENGTH, "expected enough buffer space to contain string content");
     memset(sv, 0, sizeof(sv[0]));
 
@@ -561,7 +561,7 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
 
 SEMY_API int32_t semy_get_major(const semy_t *semver)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (sv == NULL)
     {
         return -1;
@@ -571,7 +571,7 @@ SEMY_API int32_t semy_get_major(const semy_t *semver)
 
 SEMY_API int32_t semy_get_minor(const semy_t *semver)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (sv == NULL)
     {
         return -1;
@@ -581,7 +581,7 @@ SEMY_API int32_t semy_get_minor(const semy_t *semver)
 
 SEMY_API int32_t semy_get_patch(const semy_t *semver)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (sv == NULL)
     {
         return -1;
@@ -591,7 +591,7 @@ SEMY_API int32_t semy_get_patch(const semy_t *semver)
 
 SEMY_API int32_t semy_get_pre_release_count(const semy_t *semver)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (sv == NULL)
     {
         return -1;
@@ -601,7 +601,7 @@ SEMY_API int32_t semy_get_pre_release_count(const semy_t *semver)
 
 SEMY_API const char *semy_get_pre_release(const semy_t *semver, int32_t index)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (sv == NULL)
     {
         return NULL;
@@ -618,7 +618,7 @@ SEMY_API const char *semy_get_pre_release(const semy_t *semver, int32_t index)
 
 SEMY_API int32_t semy_get_build_count(const semy_t *semver)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (sv == NULL)
     {
         return -1;
@@ -628,7 +628,7 @@ SEMY_API int32_t semy_get_build_count(const semy_t *semver)
 
 SEMY_API const char *semy_get_build(const semy_t *semver, int32_t index)
 {
-    const struct SemVer *sv = (const struct SemVer *)semver;
+    const struct semVer *sv = (const struct semVer *)semver;
     if (semver == NULL)
     {
         return NULL;
@@ -644,8 +644,8 @@ SEMY_API const char *semy_get_build(const semy_t *semver, int32_t index)
 
 SEMY_API semy_error_t semy_compare(const semy_t *sv1, const semy_t *sv2, int32_t *result)
 {
-    const struct SemVer *a = (const struct SemVer *)sv1;
-    const struct SemVer *b = (const struct SemVer *)sv2;
+    const struct semVer *a = (const struct semVer *)sv1;
+    const struct semVer *b = (const struct semVer *)sv2;
 
     if (a == NULL)
     {
