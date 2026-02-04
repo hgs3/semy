@@ -21,7 +21,7 @@ export CC=gcc
 rm -f coverage.info
 
 # Build the project and execute the tests to generate a coverage report.
-cmake .. -B coverage-build -DSEMY_BUILD_TESTS=ON -DSEMY_CODE_COVERAGE=ON
+cmake .. -B coverage-build -DSEMY_BUILD_TESTS=ON -DSEMY_CODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug
 cmake --build coverage-build
 ctest --test-dir coverage-build
 
