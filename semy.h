@@ -39,7 +39,7 @@ typedef enum semy_error
 
 typedef struct semy
 {
-    char _reserved[1048];
+    char _reserved[512];
 } semy_t;
 
 // This function parses the 'version' string and populates the 'semy' structure with the results.
