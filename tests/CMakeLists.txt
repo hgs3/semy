@@ -17,6 +17,7 @@ endfunction()
 register_test(test_compare test_compare.c)
 register_test(test_parse test_parse.c)
 register_test(test_cli_decompose test_cli_decompose.c test_cli_utils.c)
+register_test(test_cli_sort test_cli_sort.c test_cli_utils.c)
 
 # Check if Clang is available as well as its fuzzer.
 # Note that fuzzing is only compatible with address sanitizer.

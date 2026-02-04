@@ -17,7 +17,7 @@
 static const struct CommandLineTestCase test_cases[] = {
     {
         {"semy", "--decompose=json", "1.2.3"},
-        EXIT_SUCCESS,
+        0,
         "{\n"
         "    \"raw\": \"1.2.3\",\n"
         "    \"major\": 1,\n"
@@ -30,7 +30,7 @@ static const struct CommandLineTestCase test_cases[] = {
     },
     {
         {"semy", "-djson", "1.2.3"},
-        EXIT_SUCCESS,
+        0,
         "{\n"
         "    \"raw\": \"1.2.3\",\n"
         "    \"major\": 1,\n"
@@ -43,7 +43,7 @@ static const struct CommandLineTestCase test_cases[] = {
     },
     {
         {"semy", "-djson", "1.2.3-alpha.1+build.20120313144700"},
-        EXIT_SUCCESS,
+        0,
         "{\n"
         "    \"raw\": \"1.2.3-alpha.1+build.20120313144700\",\n"
         "    \"major\": 1,\n"
@@ -62,7 +62,7 @@ static const struct CommandLineTestCase test_cases[] = {
     },
     {
         {"semy", "-dxml", "1.2.3"},
-        EXIT_SUCCESS,
+        0,
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
         "<semver>\n"
         "    <raw>1.2.3</raw>\n"
@@ -76,7 +76,7 @@ static const struct CommandLineTestCase test_cases[] = {
     },
     {
         {"semy", "-dxml", "1.2.3-alpha.1+build.20120313144700"},
-        EXIT_SUCCESS,
+        0,
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
         "<semver>\n"
         "    <raw>1.2.3-alpha.1+build.20120313144700</raw>\n"

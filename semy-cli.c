@@ -27,11 +27,24 @@ struct semver
     semy_t value;
 };
 
-void cli_fprintf(FILE *stream, const char *format, ...);
+// LCOV_EXCL_START
+static void cli_fprintf(FILE *stream, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    vfprintf(stream, format, args);
+    va_end(args);
+}
+// LCOV_EXCL_STOP
 
 static void cli_puts(const char *s)
 {
     cli_fprintf(stdout, "%s\n", s);
+}
+
+static void *cli_calloc(size_t count, size_t size)
+{
+    return calloc(count, size);
 }
 
 static int compare_semvers(const void *a, const void *b)
@@ -45,16 +58,6 @@ static int compare_semvers(const void *a, const void *b)
 
 static int parse(const char *string, semy_t *semvar)
 {
-    // Verify the version string is not unnecessarily long.
-    // 1 kb is more than enough for any legit version string.
-    for (size_t i = 0; string[i] != '\0'; i++)
-    {
-        if (i > 1024)
-        {
-            return EXIT_GENERAL_ERROR;
-        }
-    }
-
     const semy_error_t err = semy_parse(semvar, sizeof(semvar[0]), string);
     if (err == SEMY_BAD_SYNTAX)
     {
@@ -66,11 +69,13 @@ static int parse(const char *string, semy_t *semvar)
         cli_fprintf(stderr, "error: semantic version is too complex for this implementation\n");
         return EXIT_GENERAL_ERROR;
     }
+    // LCOV_EXCL_START
     else if (err != SEMY_NO_ERROR)
     {
         cli_fprintf(stderr, "error: internal malfunction\n");
         return EXIT_GENERAL_ERROR;
     }
+    // LCOV_EXCL_STOP
     return EXIT_SUCCESS;
 }
 
@@ -90,7 +95,7 @@ static int do_validate(int argc, char *argv[])
 
 static int do_sort(int argc, char *argv[])
 {
-    struct semver *semvers = calloc(argc, sizeof(semvers[0]));
+    struct semver *semvers = cli_calloc(argc, sizeof(semvers[0]));
     if (semvers == NULL)
     {
         cli_fprintf(stderr, "error: memory allocation failed\n");
@@ -400,13 +405,5 @@ static int cli_main(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
     return cli_main(argc, argv);
-}
-
-void cli_fprintf(FILE *stream, const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    vfprintf(stream, format, args);
-    va_end(args);
 }
 #endif

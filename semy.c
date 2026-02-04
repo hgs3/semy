@@ -530,6 +530,8 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
         return SEMY_INVALID_OPERATION;
     }
 
+    // Verify the version string is not unnecessarily long.
+    // 1 kb is more than enough for any legit version string.
     for (size_t i = 0; version[i] != '\0'; i++)
     {
         if (i >= MAX_VERSION_LENGTH)
