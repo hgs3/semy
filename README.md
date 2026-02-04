@@ -6,7 +6,7 @@ Semy (rhythms with "remy") is a [semantic version](https://semver.org/) parser a
 
 ## Features
 
-* Parse semantic versions
+* Validate semantic versions
 * Extract version identifiers
 * Check if two versions are equal
 * Check if a version is newer or older than another
