@@ -22,10 +22,21 @@ With Semy you can parse semantic versions, extract version identifiers, compare 
 .\" --------------------------------------------------------------------------
 .SH OPTIONS
 .TP
+.B "\-V \fIversion\fP..."
+.TQ
+.B "\-\-validate \fIversion\fP..."
+Validate one or more semantic versions.
+If any semantic version is malformed, the exit code will be 1.
+.TP
 .B "\-c \fIv1\fP \fIv2\fP"
 .TQ
 .B "\-\-compare \fIv1\fP \fIv2\fP"
 Compare semantic versions \fIv1\fR and \fIv2\fR and print either -1, 0, 1 depending on if \fIv1\fR < \fIv2\fR, \fIv1\fR = \fIv2\fR, \fIv1\fR > \fIv2\fR respectively.
+.TP
+.B "\-s \fIversion\fP..."
+.TQ
+.B "\-\-sort \fIversion\fP..."
+Sort semantic versions and print them in ascending order, separated by a new line character.
 .TP
 .B "\-d\fIformat\fP"
 .TQ
@@ -39,22 +50,38 @@ Where a valid \fIformat\fR is one of:
 .IP \(bu 2
 \fBxml\fP
 .RE
-.TP
-.B "\-s \fIversion\fP..."
-.TQ
-.B "\-\-sort \fIversion\fP..."
-Sort semantic versions and print them in ascending order, separated by a new line character.
-.TP
-.B "\-V \fIversion\fP..."
-.TQ
-.B "\-\-validate \fIversion\fP..."
-Validate one or more semantic versions.
-If any semantic version is malformed, the exit code will be 1.
 .\" --------------------------------------------------------------------------
 .SH RETURN CODES
-Returns \fB0\fR on success, \fB1\fR a semantic version is malformed, \fB2\fR if the program arguments are incorrect, and \fB3\fR if a general error occurred while processing the input.
+Returns \fB0\fR on success, \fB1\fR if a semantic version is malformed, \fB2\fR if the program arguments are incorrect, and \fB3\fR if a general error occurred while processing the input.
 .\" --------------------------------------------------------------------------
 .SH EXAMPLE
+Check if one or more semantic versions are well-formed according to the Semantic Version 2.0.0 specification.
+.PP
+.in +4n
+.EX
+$ semy -V 1.0.0-beta
+$ echo $?
+0
+$ semy -V 1.0.0beta
+$ echo $?
+1
+.EE
+.in
+.PP
+Semantic versions v1 and v2 can be compared with the -c option.
+The integer -1, 0, 1 is printed to \fIstdout\fR depending on if v1 < v2, v1 = v2, v1 > v2.
+.PP
+.in +4n
+.EX
+$ semy -c 1.0.4 2.0.0
+-1
+$ semy -c 3.0.0 3.0.0
+0
+$ semy -c 1.0.0-beta 1.0.0-alpha
+1
+.EE
+.in
+.PP
 Two or more semantic versions can be sorted with the -s option.
 The sorted semantic versions are printed in ascending order on their own line.
 .PP
@@ -70,20 +97,6 @@ $ semy -s 2.0.0 2.0.0-rc.1 2.0.0-beta.11 2.0.0-beta.2 \\
 2.0.0-beta.11
 2.0.0-rc.1
 2.0.0
-.EE
-.in
-.PP
-Semantic versions v1 and v2 can be compared with the -c option.
-The integer -1, 0, 1 is printed to \fIstdout\fR depending on if v1 < v2, v1 = v2, v1 > v2.
-.PP
-.in +4n
-.EX
-$ semy -c 1.0.4 2.0.0
--1
-$ semy -c 3.0.0 3.0.0
-0
-$ semy -c 1.0.0-beta 1.0.0-alpha
-1
 .EE
 .in
 .PP
