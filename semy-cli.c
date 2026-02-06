@@ -401,9 +401,11 @@ static int cli_main(int argc, char *argv[])
     return do_usage();
 }
 
+// LCOV_EXCL_START
 #ifndef UNIT_TESTING
 int main(int argc, char *argv[])
 {
     return cli_main(argc, argv);
 }
 #endif
+// LCOV_EXCL_STOP
