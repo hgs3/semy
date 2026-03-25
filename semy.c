@@ -540,6 +540,14 @@ SEMY_API semy_error_t semy_parse(semy_t *semver, size_t size, const char *versio
         }
     }
 
+    // Verify the incoming memory buffer aligns with the struct to prevent undefined behavior.
+    if (((intptr_t)semver->buf % _Alignof(struct semVer)) != 0)
+    {
+        return SEMY_INVALID_OPERATION;
+    }
+
+    // The following cast is undefined behavior, however, it's a "defacto standard" and is officially
+    // being standardized in C2Y (see https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3254.pdf).
     struct semVer *sv = (struct semVer *)semver->buf;
     static_assert(sizeof(sv->strings) > MAX_VERSION_LENGTH, "expected enough buffer space to contain string content");
     memset(sv, 0, sizeof(sv[0]));
