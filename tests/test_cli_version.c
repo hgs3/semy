@@ -18,7 +18,7 @@ static const struct CommandLineTestCase test_cases[] = {
     {
         {"semy", "--version"},
         0,
-        "0.9.0\n",
+        "0.9.1\n",
         "",
     },
 };

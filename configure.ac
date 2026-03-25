@@ -1,6 +1,6 @@
 # Specify the project and version + the minimum automake version required.
 AC_PREREQ(2.66)
-AC_INIT([semy], [0.9.0])
+AC_INIT([semy], [0.9.1])
 
 # Sanity check to verify this is indeed the source directory.
 AC_CONFIG_SRCDIR([semy.c])
