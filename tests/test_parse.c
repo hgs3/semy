@@ -330,3 +330,11 @@ TEST(semver, build_illegal_arguments)
 
     ASSERT_EQ(-1, semy_get_build_count(NULL));
 }
+
+TEST(semver, alignment)
+{
+    char misaligned[513] = {0};
+    semy_error_t err = semy_parse((semy_t *)&misaligned[1], sizeof(misaligned)-1, "1.0.0");
+    ASSERT_EQ((int)SEMY_INVALID_OPERATION, err);
+}
+
